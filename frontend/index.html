@@ -3,86 +3,92 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DevOS - Collaborative Multi-Agent Software Platform</title>
+  <title>DevOS - Agentic AI Development Platform</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- React and ReactDOM -->
-  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-  <!-- Babel Standalone to compile JSX on the fly -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <!-- Monaco Editor loader -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
   
   <style>
-    /* Custom Futuristic Glassmorphic Styles */
+    /* Premium Professional Slate Theme */
     body {
-      background-color: #0b0f19;
-      background-image: 
-        radial-gradient(at 10% 20%, rgba(13, 20, 38, 0.9) 0px, transparent 50%),
-        radial-gradient(at 90% 10%, rgba(29, 21, 62, 0.4) 0px, transparent 50%),
-        radial-gradient(at 50% 80%, rgba(15, 32, 67, 0.6) 0px, transparent 50%);
-      font-family: 'Inter', system-ui, sans-serif;
+      background-color: #090b0d;
+      color: #e2e8f0;
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow: hidden;
+      letter-spacing: -0.01em;
     }
     
-    .glass {
-      background: rgba(17, 24, 39, 0.6);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    .font-mono-premium {
+      font-family: 'JetBrains Mono', monospace;
     }
     
-    .glass-active {
-      border: 1px solid rgba(99, 102, 241, 0.4);
-      box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
+    /* Subtle professional borders and cards */
+    .card-premium {
+      background-color: rgba(17, 20, 24, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
     
+    .card-premium:hover {
+      border-color: rgba(255, 255, 255, 0.09);
+    }
+    
+    .border-premium {
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Custom premium scrollbar */
     .custom-scrollbar::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 4px;
+      height: 4px;
     }
     .custom-scrollbar::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.1);
+      background: transparent;
     }
     .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 99px;
     }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.15);
     }
     
-    @keyframes pulse-ring {
-      0% { transform: scale(0.95); opacity: 1; }
-      50% { opacity: 0.5; }
-      100% { transform: scale(1.15); opacity: 0; }
-    }
-    .agent-active-ring {
-      animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    /* Interactive Graph Nodes */
+    @keyframes pulse-node {
+      0% { r: 24px; opacity: 0.1; }
+      50% { opacity: 0.25; }
+      100% { r: 36px; opacity: 0; }
     }
     
-    @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 10px rgba(99, 102, 241, 0.2); }
-      50% { box-shadow: 0 0 25px rgba(99, 102, 241, 0.5); }
-    }
-    .glow-purple {
-      animation: pulse-glow 3s ease-in-out infinite;
+    .node-pulse {
+      animation: pulse-node 2.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
     }
   </style>
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
           colors: {
-            brand: {
-              bg: '#0b0f19',
-              card: 'rgba(17, 24, 39, 0.6)',
-              primary: '#6366f1',
-              secondary: '#a855f7'
+            slate: {
+              950: '#090b0d',
+              900: '#111418',
+              800: '#1b2026',
+              700: '#2c333c',
+              600: '#485260'
+            },
+            accent: {
+              blue: '#2f80ed',
+              emerald: '#27ae60',
+              amber: '#f2994a',
+              rose: '#eb5757'
             }
           }
         }
@@ -90,7 +96,7 @@
     }
   </script>
 </head>
-<body class="h-full text-slate-100 flex flex-col">
+<body class="h-full flex flex-col antialiased">
 
   <div id="root" class="h-full flex flex-col"></div>
 
@@ -98,17 +104,34 @@
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
 
-    // Define agent metadata for node graph
+    // Define premium SVG Icons directly in React to prevent loading glitches
+    const Icons = {
+      Cpu: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 5h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2zM9 9h6v6H9V9z"/></svg>,
+      Play: () => <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>,
+      Folder: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>,
+      File: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>,
+      Database: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>,
+      Server: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>,
+      Layout: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V16zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V16z"/></svg>,
+      Shield: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>,
+      Terminal: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>,
+      Code: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>,
+      Check: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>,
+      Clipboard: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>,
+      Warning: () => <svg className="w-5 h-5 text-accent-amber" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+    };
+
+    // Node positioning for clean layout
     const AGENTS_CONFIG = {
-      PM: { name: 'Project Manager', icon: 'clipboard-list', color: 'text-emerald-400', border: 'border-emerald-500/50', bg: 'bg-emerald-950/30', x: 120, y: 80 },
-      Architect: { name: 'Software Architect', icon: 'git-merge', color: 'text-indigo-400', border: 'border-indigo-500/50', bg: 'bg-indigo-950/30', x: 260, y: 80 },
-      DB: { name: 'Database Eng', icon: 'database', color: 'text-cyan-400', border: 'border-cyan-500/50', bg: 'bg-cyan-950/30', x: 400, y: 80 },
-      Backend: { name: 'Backend Eng', icon: 'server', color: 'text-sky-400', border: 'border-sky-500/50', bg: 'bg-sky-950/30', x: 190, y: 190 },
-      Frontend: { name: 'Frontend Eng', icon: 'layout', color: 'text-fuchsia-400', border: 'border-fuchsia-500/50', bg: 'bg-fuchsia-950/30', x: 330, y: 190 },
-      Reviewer: { name: 'Code Reviewer', icon: 'code', color: 'text-amber-400', border: 'border-amber-500/50', bg: 'bg-amber-950/30', x: 120, y: 300 },
-      Security: { name: 'Security Eng', icon: 'shield-check', color: 'text-rose-400', border: 'border-rose-500/50', bg: 'bg-rose-950/30', x: 260, y: 300 },
-      QA: { name: 'QA Engineer', icon: 'check-square', color: 'text-teal-400', border: 'border-teal-500/50', bg: 'bg-teal-950/30', x: 400, y: 300 },
-      DevOps: { name: 'DevOps Eng', icon: 'terminal', color: 'text-purple-400', border: 'border-purple-500/50', bg: 'bg-purple-950/30', x: 260, y: 410 }
+      PM: { name: 'Project Manager', icon: Icons.Clipboard, color: 'stroke-emerald-500 fill-emerald-500/10 text-emerald-400', x: 300, y: 70 },
+      Architect: { name: 'Software Architect', icon: Icons.Cpu, color: 'stroke-indigo-500 fill-indigo-500/10 text-indigo-400', x: 180, y: 170 },
+      DB: { name: 'Database Eng', icon: Icons.Database, color: 'stroke-cyan-500 fill-cyan-500/10 text-cyan-400', x: 420, y: 170 },
+      Backend: { name: 'Backend Eng', icon: Icons.Server, color: 'stroke-sky-500 fill-sky-500/10 text-sky-400', x: 120, y: 280 },
+      Frontend: { name: 'Frontend Eng', icon: Icons.Layout, color: 'stroke-fuchsia-500 fill-fuchsia-500/10 text-fuchsia-400', x: 480, y: 280 },
+      Reviewer: { name: 'Code Reviewer', icon: Icons.Code, color: 'stroke-amber-500 fill-amber-500/10 text-amber-400', x: 230, y: 340 },
+      Security: { name: 'Security Eng', icon: Icons.Shield, color: 'stroke-rose-500 fill-rose-500/10 text-rose-400', x: 370, y: 340 },
+      QA: { name: 'QA Engineer', icon: Icons.Check, color: 'stroke-teal-500 fill-teal-500/10 text-teal-400', x: 300, y: 240 },
+      DevOps: { name: 'DevOps Eng', icon: Icons.Terminal, color: 'stroke-purple-500 fill-purple-500/10 text-purple-400', x: 300, y: 430 }
     };
 
     function App() {
@@ -126,8 +149,8 @@
       const [files, setFiles] = useState([]);
       const [selectedFilePath, setSelectedFilePath] = useState('');
       const [fileContent, setFileContent] = useState('// Select a generated file to view');
-      const [userApproval, setUserApproval] = useState(null); // { action: '...', choices: [] }
-      const [activeTab, setActiveTab] = useState('code'); // code, knowledge, settings
+      const [userApproval, setUserApproval] = useState(null);
+      const [activeTab, setActiveTab] = useState('code');
       
       const terminalEndRef = useRef(null);
       const editorContainerRef = useRef(null);
@@ -193,19 +216,33 @@
         }
       }, [wsState.logs]);
 
-      // Initialize Monaco Editor
+      // Initialize Monaco Editor with premium theme colors
       useEffect(() => {
         require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
         require(['vs/editor/editor.main'], function () {
           if (editorContainerRef.current) {
+            monaco.editor.defineTheme('devos-dark-theme', {
+              base: 'vs-dark',
+              inherit: true,
+              rules: [],
+              colors: {
+                'editor.background': '#0f1115',
+                'editor.foreground': '#e2e8f0',
+                'editorLineNumber.foreground': '#485260',
+                'editorLineNumber.activeForeground': '#e2e8f0',
+                'editor.lineHighlightBackground': '#16191f'
+              }
+            });
+
             monacoEditorRef.current = monaco.editor.create(editorContainerRef.current, {
               value: fileContent,
               language: 'javascript',
-              theme: 'vs-dark',
+              theme: 'devos-dark-theme',
               automaticLayout: true,
               minimap: { enabled: false },
-              fontSize: 13,
-              lineHeight: 20,
+              fontSize: 12,
+              fontFamily: 'JetBrains Mono, monospace',
+              lineHeight: 18,
               padding: { top: 12 }
             });
           }
@@ -224,7 +261,6 @@
           const model = monacoEditorRef.current.getModel();
           monacoEditorRef.current.setValue(fileContent);
           
-          // Set language based on extension
           let lang = 'javascript';
           if (selectedFilePath.endsWith('.md')) lang = 'markdown';
           else if (selectedFilePath.endsWith('.json')) lang = 'json';
@@ -290,61 +326,48 @@
         }
       };
 
-      // Helper to render icon
-      const renderIcon = (name, className = 'w-5 h-5') => {
-        // Simple fallback until Lucide processes
-        return <i data-lucide={name} className={className}></i>;
-      };
-
-      // Process lucide icons after renders
-      useEffect(() => {
-        if (window.lucide) {
-          window.lucide.createIcons();
-        }
-      });
-
       return (
         <div className="flex flex-col h-screen select-none">
           {/* Header */}
-          <header class="glass flex items-center justify-between px-6 py-4 border-b border-white/10 shrink-0">
+          <header className="px-6 py-4 flex items-center justify-between border-b border-premium bg-slate-950/60 shrink-0">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-fuchsia-600 flex items-center justify-center glow-purple">
-                <i data-lucide="cpu" className="w-6 h-6 text-white"></i>
+              <div className="w-9 h-9 rounded-lg bg-slate-800 flex items-center justify-center border border-premium">
+                <Icons.Cpu />
               </div>
               <div>
-                <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-                  DevOS <span className="text-xs font-semibold px-2 py-0.5 bg-indigo-500/20 text-indigo-300 rounded border border-indigo-500/30 ml-2">v1.0.0 Alpha</span>
+                <h1 className="text-base font-semibold tracking-tight text-slate-100 flex items-center gap-2">
+                  DevOS <span className="text-[10px] font-medium px-1.5 py-0.5 bg-slate-800 text-slate-400 rounded border border-premium">Multi-Agent Engine</span>
                 </h1>
-                <p className="text-xs text-slate-400">Collaborative Multi-Agent Developer Platform</p>
+                <p className="text-[11px] text-slate-500 font-medium">Collaborative Developer Pipeline</p>
               </div>
             </div>
 
             {/* Metrics */}
-            <div className="flex items-center gap-8">
+            <div className="flex items-center gap-8 text-xs font-mono-premium">
               <div className="flex flex-col items-end">
-                <span className="text-xs text-slate-400">Total Tokens</span>
-                <span className="font-mono text-sm text-indigo-300">
-                  {((wsState.tokenUsage.prompt + wsState.tokenUsage.completion) || 0).toLocaleString()}
+                <span className="text-[10px] text-slate-500 uppercase tracking-wider">Usage</span>
+                <span className="text-slate-300 font-semibold">
+                  {((wsState.tokenUsage.prompt + wsState.tokenUsage.completion) || 0).toLocaleString()} tkn
                 </span>
               </div>
               <div className="flex flex-col items-end">
-                <span className="text-xs text-slate-400">Total Cost</span>
-                <span className="font-mono text-sm text-emerald-400">
+                <span className="text-[10px] text-slate-500 uppercase tracking-wider">Cost</span>
+                <span className="text-emerald-500 font-semibold">
                   ${(wsState.tokenUsage.cost || 0).toFixed(4)}
                 </span>
               </div>
               <div className="flex flex-col items-end">
-                <span className="text-xs text-slate-400">Pipeline Status</span>
-                <span className="text-sm font-semibold flex items-center gap-1.5">
+                <span className="text-[10px] text-slate-500 uppercase tracking-wider">Status</span>
+                <span className="font-semibold flex items-center gap-1.5">
                   {wsState.isRunning ? (
                     <>
-                      <span className="w-2 h-2 rounded-full bg-indigo-500 animate-ping"></span>
-                      <span className="text-indigo-400">Processing...</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent-blue animate-pulse"></span>
+                      <span className="text-accent-blue">Running</span>
                     </>
                   ) : (
                     <>
-                      <span className="w-2 h-2 rounded-full bg-slate-500"></span>
-                      <span className="text-slate-400">Idle</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                      <span className="text-slate-500">Idle</span>
                     </>
                   )}
                 </span>
@@ -355,71 +378,60 @@
           {/* Main workspace */}
           <main className="flex-1 flex overflow-hidden min-h-0">
             {/* Left sidebar: Project brief & Roadmap */}
-            <div className="w-96 flex flex-col border-r border-white/10 shrink-0 overflow-y-auto custom-scrollbar p-5 gap-5">
-              <div className="glass rounded-2xl p-4 flex flex-col gap-4">
-                <div className="flex items-center gap-2 border-b border-white/5 pb-2">
-                  <i data-lucide="edit-3" className="w-5 h-5 text-indigo-400"></i>
-                  <h3 className="font-bold text-slate-200">Describe Project Requirements</h3>
-                </div>
+            <div className="w-80 flex flex-col border-r border-premium shrink-0 overflow-y-auto custom-scrollbar p-4 gap-4">
+              <div className="card-premium p-4 flex flex-col gap-3">
+                <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Project Scope</h3>
                 <textarea
-                  className="w-full h-32 bg-slate-950/50 rounded-xl border border-white/10 p-3 text-sm focus:outline-none focus:border-indigo-500/50 resize-none custom-scrollbar"
+                  className="w-full h-28 bg-slate-950/60 rounded-lg border border-premium p-2.5 text-xs focus:outline-none focus:border-slate-600 resize-none custom-scrollbar font-sans text-slate-300"
                   value={requirements}
                   onChange={(e) => setRequirements(e.target.value)}
-                  placeholder="Describe your app..."
                   disabled={wsState.isRunning}
                 />
                 <button
                   onClick={startPipeline}
                   disabled={wsState.isRunning || !requirements}
-                  className={`w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
+                  className={`w-full py-2.5 rounded-lg text-xs font-medium flex items-center justify-center gap-2 transition-all ${
                     wsState.isRunning 
-                      ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 cursor-not-allowed'
-                      : 'bg-indigo-600 hover:bg-indigo-500 text-white hover:shadow-lg hover:shadow-indigo-500/20'
+                      ? 'bg-slate-800 text-slate-500 border border-premium cursor-not-allowed'
+                      : 'bg-slate-100 hover:bg-white text-slate-950 font-semibold shadow-sm'
                   }`}
                 >
-                  <i data-lucide="play" className="w-5 h-5"></i>
-                  Start Agent Team
+                  <Icons.Play />
+                  Start Agent Pipeline
                 </button>
               </div>
 
               {/* Epics / Timeline */}
-              <div className="flex-1 glass rounded-2xl p-4 flex flex-col min-h-0">
-                <div className="flex items-center justify-between border-b border-white/5 pb-2 mb-3">
-                  <div className="flex items-center gap-2">
-                    <i data-lucide="milestone" className="w-5 h-5 text-emerald-400"></i>
-                    <h3 className="font-bold text-slate-200">Roadmap & Timeline</h3>
-                  </div>
-                  <span className="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-bold">
-                    {wsState.progress}% Done
+              <div className="flex-1 card-premium p-4 flex flex-col min-h-0">
+                <div className="flex items-center justify-between border-b border-premium pb-2 mb-3">
+                  <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Project Timeline</h3>
+                  <span className="text-[10px] font-mono-premium bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-premium">
+                    {wsState.progress}%
                   </span>
                 </div>
                 
                 <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-1">
                   {wsState.epics.length === 0 ? (
-                    <div className="h-full flex flex-col items-center justify-center text-slate-500 py-10">
-                      <i data-lucide="layers" className="w-12 h-12 mb-2 stroke-1"></i>
-                      <p className="text-sm">No active roadmaps</p>
+                    <div className="h-full flex flex-col items-center justify-center text-slate-600 py-10 text-xs">
+                      <p>Pipeline not initiated.</p>
                     </div>
                   ) : (
-                    wsState.epics.map((epic, eIdx) => (
-                      <div key={epic.id} className="border-l border-white/10 pl-3 py-1">
-                        <h4 className="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-indigo-500/60"></span>
-                          {epic.name}
-                        </h4>
+                    wsState.epics.map((epic) => (
+                      <div key={epic.id} className="border-l border-slate-800 pl-3 py-0.5">
+                        <h4 className="text-xs font-semibold text-slate-300">{epic.name}</h4>
                         <div className="mt-2 space-y-2">
                           {wsState.tasks
                             .filter(t => t.epicId === epic.id)
                             .map(task => (
-                              <div key={task.id} className="bg-slate-900/40 p-2.5 rounded-lg border border-white/5 text-xs flex justify-between items-center">
+                              <div key={task.id} className="bg-slate-900/50 p-2 rounded border border-premium text-[11px] flex justify-between items-center">
                                 <div className="flex flex-col gap-0.5 pr-2">
                                   <span className="text-slate-300 font-medium">{task.name}</span>
-                                  <span className="text-[10px] text-slate-500">Assignee: {task.assignee} ({task.complexity})</span>
+                                  <span className="text-[9px] text-slate-500 font-mono-premium">{task.assignee} Engineer</span>
                                 </div>
-                                <span className={`shrink-0 px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                                  task.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
-                                  task.status === 'in-progress' ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 animate-pulse' :
-                                  'bg-slate-800 text-slate-400 border border-white/5'
+                                <span className={`shrink-0 px-1.5 py-0.5 rounded text-[9px] font-mono-premium ${
+                                  task.status === 'completed' ? 'text-accent-emerald bg-accent-emerald/10 border border-accent-emerald/20' :
+                                  task.status === 'in-progress' ? 'text-accent-blue bg-accent-blue/10 border border-accent-blue/20 animate-pulse' :
+                                  'text-slate-500 bg-slate-800 border border-premium'
                                 }`}>
                                   {task.status}
                                 </span>
@@ -436,56 +448,56 @@
             {/* Central Panel: Visual node graph & Code view tabs */}
             <div className="flex-1 flex flex-col overflow-hidden min-w-0">
               {/* Tab selector */}
-              <div className="glass-active flex border-b border-white/10 shrink-0">
+              <div className="flex border-b border-premium shrink-0 bg-slate-950/40">
                 <button
                   onClick={() => setActiveTab('code')}
-                  className={`px-6 py-3.5 text-sm font-bold flex items-center gap-2 border-b-2 transition-colors ${
-                    activeTab === 'code' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-400 hover:text-slate-200'
+                  className={`px-5 py-3 text-xs font-semibold flex items-center gap-1.5 border-b-2 transition-colors ${
+                    activeTab === 'code' ? 'border-slate-300 text-slate-100' : 'border-transparent text-slate-500 hover:text-slate-300'
                   }`}
                 >
-                  <i data-lucide="code" className="w-4 h-4"></i>
-                  Codebase & Editor
+                  <Icons.Code />
+                  Repository Editor
                 </button>
                 <button
                   onClick={() => setActiveTab('knowledge')}
-                  className={`px-6 py-3.5 text-sm font-bold flex items-center gap-2 border-b-2 transition-colors ${
-                    activeTab === 'knowledge' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-400 hover:text-slate-200'
+                  className={`px-5 py-3 text-xs font-semibold flex items-center gap-1.5 border-b-2 transition-colors ${
+                    activeTab === 'knowledge' ? 'border-slate-300 text-slate-100' : 'border-transparent text-slate-500 hover:text-slate-300'
                   }`}
                 >
-                  <i data-lucide="network" className="w-4 h-4"></i>
-                  Agent Collaboration Graph
+                  <Icons.Cpu />
+                  Agent Topology Graph
                 </button>
               </div>
 
-              {/* Code Tab: Workspace with Monaco Editor & file tree */}
+              {/* Code Tab */}
               {activeTab === 'code' && (
                 <div className="flex-1 flex overflow-hidden min-h-0">
                   {/* File tree */}
-                  <div className="w-64 border-r border-white/10 flex flex-col overflow-y-auto custom-scrollbar shrink-0 p-4 bg-slate-950/20">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-1.5">
-                      <i data-lucide="folder-git-2" className="w-4 h-4 text-slate-400"></i> Generated Repository
+                  <div className="w-56 border-r border-premium flex flex-col overflow-y-auto custom-scrollbar shrink-0 p-3 bg-slate-950/10">
+                    <h3 className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-1">
+                      <Icons.Folder /> files
                     </h3>
                     {files.length === 0 ? (
-                      <p className="text-xs text-slate-600 mt-2">No files generated yet.</p>
+                      <p className="text-[11px] text-slate-600">No files generated.</p>
                     ) : (
                       <div className="space-y-1">
                         {files.map(item => {
                           if (item.type === 'directory') {
                             return (
                               <div key={item.name} className="flex flex-col">
-                                <span className="flex items-center gap-2 text-xs font-semibold text-slate-400 py-1.5">
-                                  <i data-lucide="folder" className="w-4 h-4 text-indigo-400"></i> {item.name}
+                                <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 py-1">
+                                  <Icons.Folder /> {item.name}
                                 </span>
-                                <div className="pl-4 space-y-1">
+                                <div className="pl-3 space-y-1 border-l border-slate-800 ml-1.5">
                                   {item.children.map(child => (
                                     <button
                                       key={child.path}
                                       onClick={() => handleSelectFile(child.path)}
-                                      className={`w-full text-left py-1 px-2 rounded text-xs flex items-center gap-2 hover:bg-white/5 transition-colors ${
-                                        selectedFilePath === child.path ? 'bg-indigo-500/10 text-indigo-300 font-semibold' : 'text-slate-400'
+                                      className={`w-full text-left py-1 px-1.5 rounded text-[11px] font-mono-premium flex items-center gap-1.5 hover:bg-slate-900 transition-colors ${
+                                        selectedFilePath === child.path ? 'bg-slate-900 text-slate-100 font-semibold border-l border-slate-400' : 'text-slate-500'
                                       }`}
                                     >
-                                      <i data-lucide="file-code" className="w-3.5 h-3.5 text-slate-500"></i> {child.name}
+                                      <Icons.File /> {child.name}
                                     </button>
                                   ))}
                                 </div>
@@ -496,11 +508,11 @@
                             <button
                               key={item.path}
                               onClick={() => handleSelectFile(item.path)}
-                              className={`w-full text-left py-1 px-2 rounded text-xs flex items-center gap-2 hover:bg-white/5 transition-colors ${
-                                selectedFilePath === item.path ? 'bg-indigo-500/10 text-indigo-300 font-semibold' : 'text-slate-400'
+                              className={`w-full text-left py-1 px-1.5 rounded text-[11px] font-mono-premium flex items-center gap-1.5 hover:bg-slate-900 transition-colors ${
+                                selectedFilePath === item.path ? 'bg-slate-900 text-slate-100 font-semibold border-l border-slate-400' : 'text-slate-500'
                               }`}
                             >
-                              <i data-lucide="file" className="w-3.5 h-3.5 text-slate-500"></i> {item.name}
+                              <Icons.File /> {item.name}
                             </button>
                           );
                         })}
@@ -509,15 +521,9 @@
                   </div>
 
                   {/* Monaco Editor Container */}
-                  <div className="flex-1 flex flex-col overflow-hidden min-w-0 bg-[#1e1e1e]">
-                    <div className="bg-[#181818] px-4 py-2 border-b border-white/5 text-xs font-mono text-slate-400 flex justify-between items-center">
-                      <span>{selectedFilePath || 'No file selected'}</span>
-                      {selectedFilePath && (
-                        <div className="flex items-center gap-3">
-                          <span className="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">RAG Indexed</span>
-                          <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded">Verified Clean</span>
-                        </div>
-                      )}
+                  <div className="flex-1 flex flex-col overflow-hidden min-w-0 bg-[#0f1115]">
+                    <div className="bg-[#0b0c0f] px-4 py-2 border-b border-premium text-[11px] font-mono-premium text-slate-500 flex justify-between items-center">
+                      <span>{selectedFilePath || 'Select a file to inspect'}</span>
                     </div>
                     <div ref={editorContainerRef} className="flex-1 min-h-0"></div>
                   </div>
@@ -526,37 +532,35 @@
 
               {/* Agent Node Graph Tab */}
               {activeTab === 'knowledge' && (
-                <div className="flex-1 relative overflow-hidden bg-slate-950/40 p-6 flex flex-col justify-between">
+                <div className="flex-1 relative overflow-hidden bg-slate-950/20 p-6 flex flex-col justify-between">
                   <div className="absolute top-5 left-5 z-10">
-                    <h3 className="font-bold text-slate-200">Orchestrator Topology</h3>
-                    <p className="text-xs text-slate-500">Node links represent information flows, message bus routes, and data state-shares.</p>
+                    <h3 className="font-semibold text-slate-200 text-sm">System Topography Map</h3>
+                    <p className="text-[11px] text-slate-500 font-mono-premium">Interactive message-bus node configuration</p>
                   </div>
                   
                   {/* SVG Node Graph */}
                   <div className="flex-1 flex items-center justify-center relative">
-                    <svg className="w-[600px] h-[500px] overflow-visible">
-                      {/* Define lines connecting nodes */}
+                    <svg className="w-[600px] h-[500px] overflow-visible" viewBox="0 0 600 500">
                       <defs>
-                        <linearGradient id="gradient-line" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#6366f1" stopOpacity="0.4" />
-                          <stop offset="100%" stopColor="#a855f7" stopOpacity="0.4" />
+                        <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="rgba(255,255,255,0.02)" />
+                          <stop offset="100%" stopColor="rgba(255,255,255,0.08)" />
                         </linearGradient>
                       </defs>
                       
-                      {/* System Lines */}
+                      {/* Connection lines */}
                       {Object.keys(AGENTS_CONFIG).map((agentKey) => {
                         const agent = AGENTS_CONFIG[agentKey];
-                        // Connect everyone to central node (Architect/System)
                         return (
                           <line
                             key={`line-${agentKey}`}
-                            x1={260}
-                            y1={190}
+                            x1={300}
+                            y1={240}
                             x2={agent.x}
                             y2={agent.y}
-                            stroke="url(#gradient-line)"
-                            strokeWidth="1.5"
-                            strokeDasharray="4 4"
+                            stroke="url(#line-gradient)"
+                            strokeWidth="1.2"
+                            strokeDasharray="2 3"
                           />
                         );
                       })}
@@ -565,41 +569,43 @@
                       {Object.keys(AGENTS_CONFIG).map((agentKey) => {
                         const agent = AGENTS_CONFIG[agentKey];
                         const isActive = activeAgent === agentKey;
+                        const AgentIcon = agent.icon;
+                        
                         return (
-                          <g key={agentKey}>
+                          <g key={agentKey} className="transition-all duration-300">
                             {isActive && (
                               <circle
                                 cx={agent.x}
                                 cy={agent.y}
-                                r="38"
-                                className="fill-indigo-500/20 stroke-indigo-500/40 agent-active-ring"
+                                r="28"
+                                className="fill-slate-100/5 stroke-slate-100/20 node-pulse"
                               />
                             )}
                             <circle
                               cx={agent.x}
                               cy={agent.y}
-                              r="28"
+                              r="20"
                               className={`${
                                 isActive 
-                                  ? 'fill-indigo-900/60 stroke-indigo-400 stroke-2' 
-                                  : 'fill-slate-900/80 stroke-white/10'
-                              } transition-all duration-300 cursor-pointer`}
+                                  ? 'fill-slate-800 stroke-slate-300 stroke-[1.5px]' 
+                                  : 'fill-slate-950 stroke-slate-800 stroke-[1px] hover:stroke-slate-700'
+                              } cursor-pointer transition-all`}
                               onClick={() => setActiveAgent(agentKey)}
                             />
                             {/* Short text labels */}
                             <text
                               x={agent.x}
-                              y={agent.y + 42}
+                              y={agent.y + 32}
                               textAnchor="middle"
-                              className={`text-[10px] font-bold ${isActive ? 'fill-indigo-300 font-semibold' : 'fill-slate-400'}`}
+                              className={`text-[10px] font-medium tracking-tight ${isActive ? 'fill-slate-100' : 'fill-slate-500'}`}
                             >
                               {agent.name}
                             </text>
                             
                             {/* Icon overlay */}
-                            <foreignObject x={agent.x - 10} y={agent.y - 10} width="20" height="20">
-                              <div className={`flex items-center justify-center ${agent.color}`}>
-                                <i data-lucide={agent.icon} className="w-5 h-5"></i>
+                            <foreignObject x={agent.x - 8} y={agent.y - 8} width="16" height="16">
+                              <div className={`flex items-center justify-center ${isActive ? 'text-slate-100' : 'text-slate-600'}`}>
+                                <AgentIcon />
                               </div>
                             </foreignObject>
                           </g>
@@ -608,27 +614,27 @@
                     </svg>
                   </div>
 
-                  {/* Active Agent Inspector Detail Card */}
-                  <div className="glass rounded-2xl p-4 flex gap-4 items-center max-w-xl mx-auto mb-2 border border-indigo-500/20">
-                    <div className={`w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center border border-white/10 ${AGENTS_CONFIG[activeAgent] ? AGENTS_CONFIG[activeAgent].color : 'text-slate-400'}`}>
-                      <i data-lucide={AGENTS_CONFIG[activeAgent] ? AGENTS_CONFIG[activeAgent].icon : 'cpu'} className="w-6 h-6"></i>
+                  {/* Active Agent Detail Box */}
+                  <div className="card-premium p-4 flex gap-4 items-center max-w-lg mx-auto mb-2 border-premium">
+                    <div className="w-10 h-10 rounded-lg bg-slate-900 flex items-center justify-center border border-premium text-slate-300">
+                      {AGENTS_CONFIG[activeAgent] ? React.createElement(AGENTS_CONFIG[activeAgent].icon) : <Icons.Cpu />}
                     </div>
                     <div>
-                      <h4 className="font-bold text-slate-200 flex items-center gap-2">
+                      <h4 className="font-semibold text-slate-200 text-xs flex items-center gap-2">
                         {AGENTS_CONFIG[activeAgent] ? AGENTS_CONFIG[activeAgent].name : activeAgent}
-                        <span className="text-[10px] uppercase bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded font-mono">Memory Locked</span>
+                        <span className="text-[9px] font-mono-premium bg-slate-800 text-slate-500 px-1 py-0.5 rounded border border-premium">PERSISTENT MEMORY</span>
                       </h4>
-                      <p className="text-xs text-slate-400 mt-0.5">
-                        {activeAgent === 'PM' ? 'Creates user requirement roadmaps, milestones, epic decompositions, and coordinates developer tasks.' :
-                         activeAgent === 'Architect' ? 'Establishes technical stack configurations, modular dependencies, and compiles data structure maps.' :
-                         activeAgent === 'DB' ? 'Prepares schema code scripts, data integrity pipelines, and configures SQL/NoSQL drivers.' :
-                         activeAgent === 'Backend' ? 'Drafts system routes, endpoint services, security models, and runs server modules.' :
-                         activeAgent === 'Frontend' ? 'Develops visual layout structures, local state interfaces, responsive css modules, and components.' :
-                         activeAgent === 'Reviewer' ? 'Inspects codebase change sets, processes PR files, and comments line-by-line on syntax structures.' :
-                         activeAgent === 'Security' ? 'Performs static security analysis checkups, searches database credentials issues, and runs check tests.' :
-                         activeAgent === 'QA' ? 'Prepares unit-testing routines, executes endpoint tests, checks coverage metrics, and reports bug logs.' :
-                         activeAgent === 'DevOps' ? 'Prepares configurations scripts (Docker), configures deployment triggers, and runs build servers.' :
-                         'System controller message router and orchestrator manager.'}
+                      <p className="text-[11px] text-slate-400 mt-1 font-sans leading-relaxed">
+                        {activeAgent === 'PM' ? 'Decomposes software request scopes into manageable Gantt milestones and assigns tickets to developers.' :
+                         activeAgent === 'Architect' ? 'Defines directory layouts, API endpoints schemas, and tech-stack connection constraints.' :
+                         activeAgent === 'DB' ? 'Writes relational and document schema controllers, handles migrations, and configs DB adapters.' :
+                         activeAgent === 'Backend' ? 'Drafts system routers, auth middleware files, API CRUD routes, and integrates core servers.' :
+                         activeAgent === 'Frontend' ? 'Develops UI templates, states stores using Zustand, and visual markup layouts.' :
+                         activeAgent === 'Reviewer' ? 'Performs manual git diff inspections and raises comments on code quality and styling.' :
+                         activeAgent === 'Security' ? 'Analyzes codebase credentials leakages, performs static code inspections, and prints warnings.' :
+                         activeAgent === 'QA' ? 'Prepares test runners, asserts authentication flows, checks coverage logs, and reports bugs.' :
+                         activeAgent === 'DevOps' ? 'Configures container setups (Docker files) and sets up automated integration runners.' :
+                         'Orchestrates WebSocket events, handles user approvals, and updates system records.'}
                       </p>
                     </div>
                   </div>
@@ -638,28 +644,28 @@
           </main>
 
           {/* Bottom Panel: Terminal and Approvals */}
-          <footer class="h-80 border-t border-white/10 flex flex-col shrink-0 overflow-hidden">
+          <footer className="h-72 border-t border-premium flex flex-col shrink-0 overflow-hidden bg-slate-950">
             {/* Action Banner for approvals */}
             {userApproval && (
-              <div className="bg-indigo-950/80 border-b border-indigo-500/30 px-6 py-3 flex items-center justify-between text-sm animate-pulse glow-purple">
-                <div className="flex items-center gap-3">
-                  <i data-lucide="alert-triangle" className="w-5 h-5 text-indigo-400"></i>
-                  <span className="text-slate-200 font-semibold font-medium">
+              <div className="bg-slate-900 border-b border-premium px-6 py-2.5 flex items-center justify-between text-xs font-medium">
+                <div className="flex items-center gap-2">
+                  <Icons.Warning />
+                  <span className="text-slate-300">
                     {userApproval.action === 'approve_architecture' 
-                      ? 'Architect created System Spec layout. Approve architecture proposal to proceed.'
-                      : 'Code Reviewer raised Pull Request #1. Approve merging change set.'
+                      ? 'Architect created System Design. Review and approve architecture specification.'
+                      : 'Reviewer generated Pull Request #1. Approve merging into default branch.'
                     }
                   </span>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   {userApproval.choices.map((choice) => (
                     <button
                       key={choice}
                       onClick={() => approveAction(userApproval.action)}
-                      className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                      className={`px-3 py-1 rounded-md text-[11px] transition-all ${
                         choice.includes('Approve') || choice.includes('Merge')
-                          ? 'bg-indigo-600 hover:bg-indigo-500 text-white hover:shadow-lg'
-                          : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/10'
+                          ? 'bg-slate-100 hover:bg-white text-slate-950 font-semibold'
+                          : 'bg-slate-800 hover:bg-slate-700 text-slate-400 border border-premium'
                       }`}
                     >
                       {choice}
@@ -670,39 +676,47 @@
             )}
 
             {/* Terminal */}
-            <div className="flex-1 flex flex-col bg-slate-950 p-4 font-mono text-xs overflow-hidden">
-              <div className="flex items-center justify-between border-b border-white/5 pb-2 mb-2 shrink-0">
-                <span className="text-slate-400 flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Live Agent Message Bus & Logs
+            <div className="flex-1 flex flex-col p-4 font-mono-premium text-[11px] overflow-hidden bg-[#0a0c0f]">
+              <div className="flex items-center justify-between border-b border-premium pb-2 mb-2 shrink-0">
+                <span className="text-slate-500 flex items-center gap-1.5 uppercase tracking-wider text-[10px] font-semibold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent-emerald"></span> Message Bus Event Logs
                 </span>
                 <button
                   onClick={() => setWsState(prev => ({ ...prev, logs: [] }))}
-                  className="text-slate-500 hover:text-slate-300 font-semibold"
+                  className="text-slate-600 hover:text-slate-400 text-[10px] font-semibold"
                 >
-                  Clear Console
+                  CLEAR
                 </button>
               </div>
 
               <div className="flex-1 overflow-y-auto custom-scrollbar space-y-1.5 select-text pr-2">
                 {wsState.logs.length === 0 ? (
-                  <div className="text-slate-600">Console empty. Start the agent team to see output streams.</div>
+                  <div className="text-slate-700 italic">Terminal stream initialized. Start pipeline to populate logs.</div>
                 ) : (
                   wsState.logs.map((log) => {
-                    let agentColor = 'text-slate-400';
-                    if (AGENTS_CONFIG[log.agent]) agentColor = AGENTS_CONFIG[log.agent].color;
+                    let agentColor = 'text-slate-500';
+                    if (log.agent === 'PM') agentColor = 'text-emerald-400';
+                    else if (log.agent === 'Architect') agentColor = 'text-indigo-400';
+                    else if (log.agent === 'DB') agentColor = 'text-cyan-400';
+                    else if (log.agent === 'Backend') agentColor = 'text-sky-400';
+                    else if (log.agent === 'Frontend') agentColor = 'text-fuchsia-400';
+                    else if (log.agent === 'Reviewer') agentColor = 'text-amber-400';
+                    else if (log.agent === 'Security') agentColor = 'text-rose-400';
+                    else if (log.agent === 'QA') agentColor = 'text-teal-400';
+                    else if (log.agent === 'DevOps') agentColor = 'text-purple-400';
                     
-                    let logTypeColor = 'text-slate-300';
-                    if (log.type === 'success') logTypeColor = 'text-emerald-400';
-                    else if (log.type === 'warning') logTypeColor = 'text-amber-400 font-semibold';
-                    else if (log.type === 'error') logTypeColor = 'text-rose-400 font-bold';
-                    else if (log.type === 'chat') logTypeColor = 'text-slate-300 italic';
+                    let logTypeColor = 'text-slate-400';
+                    if (log.type === 'success') logTypeColor = 'text-emerald-400 font-medium';
+                    else if (log.type === 'warning') logTypeColor = 'text-amber-400';
+                    else if (log.type === 'error') logTypeColor = 'text-rose-400 font-semibold';
+                    else if (log.type === 'chat') logTypeColor = 'text-slate-300';
 
                     return (
                       <div key={log.id} className="flex gap-2 leading-relaxed">
-                        <span className="text-slate-600 shrink-0">
+                        <span className="text-slate-700 shrink-0 select-none">
                           {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                         </span>
-                        <span className={`${agentColor} font-bold shrink-0 w-24`}>[{log.agent}]</span>
+                        <span className={`${agentColor} font-semibold shrink-0 w-20`}>[{log.agent}]</span>
                         <span className={`${logTypeColor} flex-1`}>{log.message}</span>
                       </div>
                     );
